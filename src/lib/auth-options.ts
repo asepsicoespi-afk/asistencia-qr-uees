@@ -28,9 +28,11 @@ export const authOptions: NextAuthOptions = {
       return token;
     },
     async session({ session, token }) {
-      (session as any).accessToken = token.accessToken;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (session as Record<string, any>).accessToken = token.accessToken;
       if (session.user?.email) {
-        (session as any).isProfesor =
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (session as Record<string, any>).isProfesor =
           session.user.email === process.env.PROFESSOR_EMAIL;
       }
       return session;

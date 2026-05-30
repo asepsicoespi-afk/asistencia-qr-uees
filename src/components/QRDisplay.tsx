@@ -23,6 +23,7 @@ export default function QRDisplay({ token }: QRDisplayProps) {
 
   return (
     <div className="flex flex-col items-center">
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={qrDataUrl} alt="QR de asistencia" className="w-80 h-80" />
       <p className="text-sm text-gray-400 mt-2 font-mono">{token.slice(0, 8)}...</p>
     </div>

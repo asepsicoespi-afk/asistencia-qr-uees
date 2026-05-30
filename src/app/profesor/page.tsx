@@ -47,7 +47,9 @@ export default function ProfesorPage() {
         const data = await res.json();
         setRegistrations(data);
       }
-    } catch (e) {}
+    } catch {
+      // silent fail on poll
+    }
   }, [sesionId]);
 
   useEffect(() => {
@@ -72,7 +74,7 @@ export default function ProfesorPage() {
     const studRes = await fetch(`/api/estudiantes?paralelo=${paralelo}`);
     if (studRes.ok) {
       const studData = await studRes.json();
-      setStudents(studData.map((s: any) => ({ nombre: s.nombre, email: s.email })));
+      setStudents(studData.map((s: { nombre: string; email: string }) => ({ nombre: s.nombre, email: s.email })));
     }
 
     setPhase("active");

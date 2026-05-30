@@ -77,7 +77,8 @@ export async function POST(req: NextRequest) {
     metodo: "qr",
   });
 
-  const accessToken = (session as any).accessToken;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const accessToken = (session as Record<string, any>).accessToken;
   if (accessToken) {
     sendAttendanceEmail(
       accessToken, email, estudiante.nombre, tipo, sesion.paralelo, sesion.fecha, horaRegistro
