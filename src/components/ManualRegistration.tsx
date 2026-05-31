@@ -34,7 +34,7 @@ export default function ManualRegistration({ students, sesionId, onRegistered }:
     });
 
     if (res.ok) {
-      setMessage(`${student.nombre} registrado como ${tipo === "P" ? "Presente" : tipo === "A" ? "Atraso" : "Falta"}`);
+      setMessage(`${student.nombre} registrado`);
       setSelectedEmail("");
       onRegistered();
     } else {
@@ -44,34 +44,56 @@ export default function ManualRegistration({ students, sesionId, onRegistered }:
     setLoading(false);
   }
 
+  const tipoConfig = {
+    P: { label: "Presente", color: "bg-[var(--present)]", colorInactive: "bg-[var(--present)]/10 text-[var(--present)]" },
+    A: { label: "Atraso", color: "bg-[var(--late)]", colorInactive: "bg-[var(--late)]/10 text-[var(--late)]" },
+    F: { label: "Falta", color: "bg-[var(--absent)]", colorInactive: "bg-[var(--absent)]/10 text-[var(--absent)]" },
+  };
+
   return (
-    <div className="border rounded-lg p-4 space-y-3">
-      <h3 className="font-semibold text-sm text-gray-700">Registro manual</h3>
-      <select value={selectedEmail} onChange={(e) => setSelectedEmail(e.target.value)} className="w-full border rounded p-2 text-sm">
+    <div className="space-y-4">
+      <h3 className="text-sm font-medium text-[var(--text-muted)] uppercase tracking-wider">
+        Registro manual
+      </h3>
+
+      <select
+        value={selectedEmail}
+        onChange={(e) => setSelectedEmail(e.target.value)}
+        className="w-full bg-[var(--bg-secondary)] border border-[var(--border)] text-[var(--text-primary)] rounded-lg p-2.5 text-sm focus:outline-none focus:border-[var(--accent)] transition-colors"
+      >
         <option value="">Seleccionar estudiante...</option>
         {students.map((s) => (
           <option key={s.email} value={s.email}>{s.nombre}</option>
         ))}
       </select>
+
       <div className="flex gap-2">
         {(["P", "A", "F"] as const).map((t) => (
           <button
             key={t}
             onClick={() => setTipo(t)}
-            className={`px-3 py-1 rounded text-sm ${
+            className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
               tipo === t
-                ? t === "P" ? "bg-green-600 text-white" : t === "A" ? "bg-yellow-500 text-white" : "bg-red-500 text-white"
-                : "bg-gray-100"
+                ? `${tipoConfig[t].color} text-[var(--bg-primary)]`
+                : tipoConfig[t].colorInactive
             }`}
           >
-            {t === "P" ? "Presente" : t === "A" ? "Atraso" : "Falta"}
+            {tipoConfig[t].label}
           </button>
         ))}
       </div>
-      <button onClick={handleSubmit} disabled={!selectedEmail || loading} className="w-full bg-blue-600 text-white py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50">
+
+      <button
+        onClick={handleSubmit}
+        disabled={!selectedEmail || loading}
+        className="w-full bg-[var(--accent)] text-[var(--bg-primary)] py-2.5 rounded-lg text-sm font-semibold hover:bg-[var(--accent-hover)] disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+      >
         {loading ? "Registrando..." : "Registrar"}
       </button>
-      {message && <p className="text-sm text-gray-600">{message}</p>}
+
+      {message && (
+        <p className="text-sm text-[var(--text-secondary)] text-center">{message}</p>
+      )}
     </div>
   );
 }
