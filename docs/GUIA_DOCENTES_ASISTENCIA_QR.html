@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia para Docentes: Sistema de Asistencia con QR — UEES</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --primary: #0B1215;
+    --accent: #3ECFB4;
+    --accent-light: #e6faf6;
+    --present: #3ECFB4;
+    --late: #F5A623;
+    --absent: #E74C5E;
+    --text: #1a1a2e;
+    --text-light: #6b7280;
+    --bg: #ffffff;
+    --bg-alt: #f8fafb;
+    --border: #e5e7eb;
+    --card-shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  @media print {
+    body { font-size: 12px; line-height: 1.5; }
+    .cover { page-break-after: always; }
+    .phase { page-break-before: always; }
+    .no-print { display: none; }
+    .step-card { break-inside: avoid; }
+  }
+
+  /* COVER */
+  .cover {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0B1215 0%, #122224 50%, #1A2F32 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 60px 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 50%, rgba(62,207,180,0.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(62,207,180,0.05) 0%, transparent 40%);
+  }
+
+  .cover * { position: relative; z-index: 1; }
+
+  .cover-icon {
+    width: 100px;
+    height: 100px;
+    background: rgba(62,207,180,0.1);
+    border-radius: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 40px;
+  }
+
+  .cover-icon svg { width: 50px; height: 50px; color: var(--accent); }
+
+  .cover h1 {
+    font-size: 42px;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+
+  .cover h2 {
+    font-size: 20px;
+    font-weight: 400;
+    color: var(--accent);
+    margin-bottom: 40px;
+  }
+
+  .cover-meta {
+    color: #9BB6B8;
+    font-size: 14px;
+    line-height: 2;
+  }
+
+  .cover-badge {
+    display: inline-block;
+    background: rgba(62,207,180,0.15);
+    color: var(--accent);
+    padding: 8px 20px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-top: 30px;
+    letter-spacing: 0.5px;
+  }
+
+  /* CONTENT */
+  .content {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 60px 40px;
+  }
+
+  /* SECTION HEADERS */
+  .phase-header {
+    background: var(--primary);
+    color: white;
+    padding: 30px 35px;
+    border-radius: 16px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .phase-header::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 120px; height: 100%;
+    background: linear-gradient(135deg, transparent 0%, rgba(62,207,180,0.1) 100%);
+  }
+
+  .phase-number {
+    display: inline-block;
+    background: var(--accent);
+    color: var(--primary);
+    font-weight: 800;
+    font-size: 13px;
+    padding: 4px 14px;
+    border-radius: 100px;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  .phase-header h2 {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .phase-header p {
+    color: #9BB6B8;
+    font-size: 14px;
+  }
+
+  /* STEP CARDS */
+  .step-card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 16px;
+    box-shadow: var(--card-shadow);
+  }
+
+  .step-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .step-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: var(--accent-light);
+    color: var(--accent);
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .step-card ol, .step-card ul {
+    padding-left: 20px;
+    color: var(--text);
+  }
+
+  .step-card li {
+    margin-bottom: 8px;
+  }
+
+  .step-card li strong {
+    color: var(--text);
+  }
+
+  /* INFO BOXES */
+  .info-box {
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    font-size: 14px;
+  }
+
+  .info-box.warning {
+    background: #fef3cd;
+    border-left: 4px solid var(--late);
+  }
+
+  .info-box.success {
+    background: var(--accent-light);
+    border-left: 4px solid var(--accent);
+  }
+
+  .info-box.danger {
+    background: #fde8eb;
+    border-left: 4px solid var(--absent);
+  }
+
+  .info-box strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  /* CODE BLOCKS */
+  .code-block {
+    background: #1a1a2e;
+    color: #e2e8f0;
+    padding: 20px 24px;
+    border-radius: 10px;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    overflow-x: auto;
+    margin: 16px 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* TABLES */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 14px;
+  }
+
+  th {
+    background: var(--bg-alt);
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border);
+    color: var(--text);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* VOCAB */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .vocab-item {
+    background: var(--bg-alt);
+    border-radius: 10px;
+    padding: 14px 18px;
+  }
+
+  .vocab-item strong {
+    display: block;
+    color: var(--accent);
+    font-size: 13px;
+    margin-bottom: 4px;
+  }
+
+  .vocab-item span {
+    font-size: 13px;
+    color: var(--text-light);
+  }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin: 30px 0;
+  }
+
+  .flow-step {
+    background: var(--primary);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .flow-arrow {
+    color: var(--accent);
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  /* PROMPT BOX */
+  .prompt-box {
+    background: linear-gradient(135deg, #f0fdf9 0%, #ecfdf5 100%);
+    border: 2px solid var(--accent);
+    border-radius: 16px;
+    padding: 30px;
+    margin: 24px 0;
+  }
+
+  .prompt-box h4 {
+    color: var(--accent);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 16px;
+  }
+
+  .prompt-content {
+    background: white;
+    border-radius: 10px;
+    padding: 24px;
+    font-size: 13.5px;
+    line-height: 1.8;
+    border: 1px solid #d1fae5;
+  }
+
+  /* TROUBLESHOOTING */
+  .trouble-item {
+    display: flex;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .trouble-problem {
+    flex: 1;
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .trouble-solution {
+    flex: 1.5;
+    color: var(--text-light);
+    font-size: 14px;
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-light);
+    font-size: 13px;
+    border-top: 1px solid var(--border);
+    margin-top: 60px;
+  }
+
+  h2.section-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 40px 0 16px;
+    color: var(--text);
+  }
+
+  p { margin-bottom: 12px; }
+
+  .tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .tag-time { background: #ede9fe; color: #7c3aed; }
+  .tag-where { background: #dbeafe; color: #2563eb; }
+  .tag-cost { background: var(--accent-light); color: #059669; }
+</style>
+</head>
+<body>
+
+<!-- COVER PAGE -->
+<div class="cover">
+  <div class="cover-icon">
+    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z"/>
+    </svg>
+  </div>
+  <h1>Asistencia con<br>Codigo QR</h1>
+  <h2>Guia paso a paso para docentes</h2>
+  <div class="cover-meta">
+    Universidad de Especialidades Espiritu Santo (UEES)<br>
+    Autor: Felipe Andres Guzman Dahik<br>
+    Profesor de Etica — UFORU1103<br>
+    Mayo 2026
+  </div>
+  <div class="cover-badge">COSTO TOTAL: $0 — 100% GRATUITO</div>
+</div>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- WHAT IS THIS -->
+  <h2 class="section-title">Que es este proyecto</h2>
+  <p>Es un sistema web gratuito que te permite tomar asistencia en clase usando un codigo QR que proyectas en pantalla. Tus estudiantes lo escanean con su celular y la asistencia queda registrada automaticamente en un Google Sheets.</p>
+
+  <div class="flow">
+    <div class="flow-step">Abres el panel<br>en tu laptop</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Proyectas<br>el QR</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Estudiantes<br>escanean</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Valida ubicacion<br>y correo</div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-step">Registrado en<br>Google Sheets</div>
+  </div>
+
+  <div class="info-box success">
+    <strong>Que necesitas</strong>
+    Cuenta institucional @uees.edu.ec &bull; Laptop con internet &bull; Un asistente de IA (Claude, ChatGPT, Copilot, Gemini) &bull; 2-3 horas para la configuracion inicial
+  </div>
+
+  <!-- VOCABULARY -->
+  <h2 class="section-title">Vocabulario minimo</h2>
+  <p>No necesitas saber programar. Estos terminos aparecen en la guia:</p>
+
+  <div class="vocab-grid">
+    <div class="vocab-item"><strong>Deploy</strong><span>Publicar tu app en internet</span></div>
+    <div class="vocab-item"><strong>Vercel</strong><span>Servicio gratuito que hospeda tu app</span></div>
+    <div class="vocab-item"><strong>API</strong><span>Forma en que dos sistemas se comunican</span></div>
+    <div class="vocab-item"><strong>OAuth</strong><span>Sistema de "Iniciar sesion con Google"</span></div>
+    <div class="vocab-item"><strong>QR dinamico</strong><span>QR que cambia cada sesion</span></div>
+    <div class="vocab-item"><strong>Geolocalizacion</strong><span>Saber donde esta el celular fisicamente</span></div>
+    <div class="vocab-item"><strong>Repositorio</strong><span>Carpeta en GitHub donde vive el codigo</span></div>
+    <div class="vocab-item"><strong>Variable de entorno</strong><span>Dato secreto que la app necesita</span></div>
+    <div class="vocab-item"><strong>Google Sheets API</strong><span>Permite a la app leer/escribir en Sheets</span></div>
+    <div class="vocab-item"><strong>Service Account</strong><span>"Cuenta robot" para acceso automatico</span></div>
+  </div>
+
+  <!-- PHASE 1 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">FASE 1</div>
+      <h2>Crear el proyecto en Google Cloud</h2>
+      <p><span class="tag tag-time">20 minutos</span> <span class="tag tag-where">Navegador web</span></p>
+    </div>
+
+    <p>Esta fase se hace una sola vez. Creas las credenciales que tu aplicacion necesita.</p>
+
+    <div class="step-card">
+      <h3><span class="step-num">1</span> Crear un proyecto en Google Cloud</h3>
+      <ol>
+        <li>Abre <strong>console.cloud.google.com</strong></li>
+        <li>Inicia sesion con tu cuenta <strong>@uees.edu.ec</strong></li>
+        <li>En la barra superior, clic en el selector de proyectos</li>
+        <li>Clic en <strong>Nuevo proyecto</strong></li>
+        <li>Nombre: <strong>asistencia-qr</strong></li>
+        <li>Clic en <strong>Crear</strong></li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">2</span> Habilitar las APIs necesarias</h3>
+      <ol>
+        <li>Menu lateral &rarr; <strong>APIs y servicios</strong> &rarr; <strong>Biblioteca</strong></li>
+        <li>Busca <strong>Google Sheets API</strong> &rarr; clic en <strong>Habilitar</strong></li>
+        <li>Regresa y busca <strong>Gmail API</strong> &rarr; clic en <strong>Habilitar</strong></li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">3</span> Configurar la pantalla de consentimiento</h3>
+      <ol>
+        <li><strong>APIs y servicios</strong> &rarr; <strong>Pantalla de consentimiento OAuth</strong></li>
+        <li>Selecciona <strong>Interno</strong> (solo @uees.edu.ec)</li>
+        <li>Nombre de la app: <strong>Asistencia QR</strong></li>
+        <li>Correos: tu correo @uees.edu.ec</li>
+        <li><strong>Guardar y continuar</strong> en todos los pasos</li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">4</span> Crear credenciales OAuth 2.0</h3>
+      <ol>
+        <li><strong>Credenciales</strong> &rarr; <strong>Crear credenciales</strong> &rarr; <strong>ID de cliente OAuth 2.0</strong></li>
+        <li>Tipo: <strong>Aplicacion web</strong> &bull; Nombre: <strong>Asistencia QR Web</strong></li>
+        <li>URI de redireccionamiento: <strong>http://localhost:3000/api/auth/callback/google</strong></li>
+        <li>Clic en <strong>Crear</strong></li>
+        <li>Copia y guarda: <strong>Client ID</strong> y <strong>Client Secret</strong></li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">5</span> Crear una cuenta de servicio</h3>
+      <ol>
+        <li><strong>Crear credenciales</strong> &rarr; <strong>Cuenta de servicio</strong></li>
+        <li>Nombre: <strong>asistencia-sheets</strong></li>
+        <li>Clic en la cuenta creada &rarr; pestana <strong>Claves</strong></li>
+        <li><strong>Agregar clave</strong> &rarr; <strong>JSON</strong> &rarr; <strong>Crear</strong></li>
+        <li>Del archivo JSON descargado, copia: <strong>client_email</strong> y <strong>private_key</strong></li>
+      </ol>
+    </div>
+
+    <div class="info-box warning">
+      <strong>Guarda en un lugar seguro</strong>
+      Tendras 4 valores: Client ID, Client Secret, Service Account Email, Private Key. Los necesitaras en la Fase 2. Nunca los compartas en chats ni los subas a internet.
+    </div>
+  </div>
+
+  <!-- PHASE 2 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">FASE 2</div>
+      <h2>Crear la aplicacion con ayuda de IA</h2>
+      <p><span class="tag tag-time">30-60 minutos</span> <span class="tag tag-where">Tu computadora + asistente de IA</span></p>
+    </div>
+
+    <p>Le pides a un asistente de IA que construya la aplicacion por ti. <strong>No necesitas saber programar</strong> — solo necesitas darle las instrucciones correctas.</p>
+
+    <div class="step-card">
+      <h3><span class="step-num">1</span> Preparar tu informacion</h3>
+      <p>Antes de hablar con la IA, ten listos:</p>
+      <ol>
+        <li><strong>Tu correo institucional</strong> (ej: juan.perez@uees.edu.ec)</li>
+        <li><strong>Tus paralelos</strong> con cantidad de estudiantes</li>
+        <li><strong>Reglas de asistencia:</strong> faltas para advertencia, para perder, atrasos que equivalen a falta, puntos de descuento</li>
+        <li><strong>Listas de estudiantes</strong> en CSV o Excel (nombre, apellido, correo, codigo)</li>
+        <li><strong>Coordenadas GPS</strong> del edificio (abre Google Maps en tu celular en el edificio, manten presionado un punto)</li>
+        <li><strong>Las credenciales</strong> de la Fase 1</li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">2</span> Copiar el prompt y darselo a la IA</h3>
+      <p>Copia el siguiente texto, reemplaza lo que esta entre [corchetes] con tus datos, y pegalo en tu asistente de IA preferido:</p>
+    </div>
+
+    <div class="prompt-box">
+      <h4>Prompt para copiar y pegar en tu asistente de IA</h4>
+      <div class="prompt-content">
+Necesito que me construyas un sistema de asistencia universitaria con codigo QR para mis clases.<br><br>
+
+<strong>Que hace el sistema:</strong><br>
+1. Yo (el profesor) abro un panel web desde mi laptop y selecciono el paralelo<br>
+2. Se genera un QR unico que proyecto en pantalla<br>
+3. Los estudiantes escanean el QR con su celular<br>
+4. El sistema valida: login con Google institucional (@uees.edu.ec), geolocalizacion, y que esten en mi lista<br>
+5. Los primeros 3 minutos = PRESENTE, minutos 3 a 5 = ATRASO<br>
+6. Puedo cerrar manualmente o se cierra sola a los 5 minutos<br>
+7. El estudiante recibe email de comprobante<br>
+8. Todo se guarda en Google Sheets<br>
+9. Puedo registrar manualmente a un estudiante (excepciones)<br><br>
+
+<strong>Mis datos:</strong><br>
+- Mi correo (profesor): [tu-correo@uees.edu.ec]<br>
+- Paralelos: [Paralelo 1] con [X] estudiantes, [Paralelo 2] con [X] estudiantes<br><br>
+
+<strong>Reglas de asistencia:</strong><br>
+- 1 falta = -[X] punto(s) / 1 atraso = -[X] punto(s)<br>
+- [X] atrasos = 1 falta efectiva<br>
+- [X] faltas efectivas = advertencia formal<br>
+- [X] faltas efectivas = pierde el curso<br><br>
+
+<strong>Geolocalizacion:</strong><br>
+- Coordenadas: latitud [X], longitud [X]<br>
+- Radio: [X] metros<br><br>
+
+<strong>Tecnologias:</strong> Next.js 14, TypeScript, Tailwind CSS, NextAuth.js, Google Sheets API, Gmail API, Vercel (gratis), tema oscuro futurista minimalista<br><br>
+
+<strong>Google Sheets (4 hojas):</strong><br>
+- "Estudiantes": paralelo, codigo, nombre, email<br>
+- "Sesiones": sesion_id, paralelo, fecha, hora_apertura, hora_cierre, estado<br>
+- "Registros": sesion_id, email, nombre, hora_registro, lat, lng, distancia_m, tipo, metodo<br>
+- "Resumen": paralelo, codigo, nombre, email, total_sesiones, presentes, atrasos, faltas_directas, faltas_efectivas, descuento_pts, estado<br><br>
+
+<strong>Seguridad:</strong> QR dinamico (UUID), solo @uees.edu.ec, geolocalizacion obligatoria, un registro por sesion, solo mi cuenta accede al panel de profesor<br><br>
+
+<strong>Credenciales (.env.local):</strong><br>
+- GOOGLE_CLIENT_ID: [pegar]<br>
+- GOOGLE_CLIENT_SECRET: [pegar]<br>
+- GOOGLE_SERVICE_ACCOUNT_EMAIL: [pegar]<br>
+- GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY: [pegar]<br>
+- PROFESSOR_EMAIL: [tu-correo@uees.edu.ec]<br>
+- BUILDING_LAT: [latitud] / BUILDING_LNG: [longitud]<br>
+- GEO_RADIUS_METERS: [radio]<br><br>
+
+Construye el proyecto completo, paso a paso, con commits. Al final quiero hacer deploy a Vercel.
+      </div>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">3</span> Dejar que la IA trabaje</h3>
+      <p>La IA va a crear todo el codigo automaticamente. Si te pide informacion, dasela. Si algo falla, copia el error y pegaselo para que lo corrija.</p>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">4</span> Verificar que funciona</h3>
+      <p>Cuando termine, ejecuta en la terminal:</p>
+      <div class="code-block">npm run dev</div>
+      <p>Abre <strong>http://localhost:3000</strong> en tu navegador. Deberias ver la pagina de login.</p>
+    </div>
+  </div>
+
+  <!-- PHASE 3 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">FASE 3</div>
+      <h2>Crear y configurar el Google Sheets</h2>
+      <p><span class="tag tag-time">15 minutos</span> <span class="tag tag-where">Navegador web</span></p>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">1</span> Crear el Google Sheets</h3>
+      <ol>
+        <li>Ve a <strong>sheets.google.com</strong> con tu cuenta institucional</li>
+        <li>Crea un nuevo Sheets: <strong>Asistencia QR — [Tu Materia]</strong></li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">2</span> Compartir con la cuenta de servicio</h3>
+      <ol>
+        <li>Clic en <strong>Compartir</strong></li>
+        <li>Pega el email de la cuenta de servicio</li>
+        <li>Permisos: <strong>Editor</strong></li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">3</span> Obtener el Spreadsheet ID</h3>
+      <p>De la URL del Sheets, copia la parte entre <strong>/d/</strong> y <strong>/edit</strong>. Ese es tu Spreadsheet ID.</p>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">4</span> Crear hojas y cargar estudiantes</h3>
+      <p>Pidele a la IA que cree las 4 hojas con encabezados y cargue tus listas de estudiantes. Dale el Spreadsheet ID y los archivos CSV.</p>
+    </div>
+  </div>
+
+  <!-- PHASE 4 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">FASE 4</div>
+      <h2>Publicar en internet (Deploy)</h2>
+      <p><span class="tag tag-time">20 minutos</span> <span class="tag tag-where">Navegador + terminal</span></p>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">1</span> Crear cuentas en GitHub y Vercel</h3>
+      <ol>
+        <li>Crea cuenta en <strong>github.com</strong> (gratis)</li>
+        <li>Crea cuenta en <strong>vercel.com</strong> (gratis, usa "Continue with GitHub")</li>
+      </ol>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">2</span> Subir codigo y hacer deploy</h3>
+      <p>Pidele a la IA que suba el codigo a GitHub y haga deploy a Vercel con todas las variables de entorno. Te dara una URL como: <strong>https://tu-proyecto.vercel.app</strong></p>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">3</span> Agregar URL a Google Cloud</h3>
+      <ol>
+        <li>Ve a Google Cloud &rarr; Credenciales &rarr; tu cliente OAuth</li>
+        <li>Agrega a URIs de redireccionamiento: <strong>https://tu-proyecto.vercel.app/api/auth/callback/google</strong></li>
+        <li>Guarda</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- PHASE 5 -->
+  <div class="phase">
+    <div class="phase-header">
+      <div class="phase-number">FASE 5</div>
+      <h2>Usar en clase</h2>
+      <p><span class="tag tag-time">2 minutos por sesion</span> <span class="tag tag-where">Aula de clase</span></p>
+    </div>
+
+    <div class="step-card">
+      <h3><span class="step-num">1</span> Durante la clase</h3>
+      <ol>
+        <li>Abre <strong>https://tu-proyecto.vercel.app/profesor</strong></li>
+        <li>Selecciona el paralelo</li>
+        <li>Clic en <strong>Abrir asistencia</strong></li>
+        <li>Proyecta el QR en pantalla</li>
+        <li>Los estudiantes escanean con su celular (Chrome o Safari)</li>
+        <li>Monitorea los registros en tiempo real</li>
+        <li>Usa <strong>Registro manual</strong> para excepciones</li>
+        <li>Clic en <strong>Cerrar asistencia</strong> (o espera 5 min)</li>
+      </ol>
+    </div>
+
+    <div class="info-box success">
+      <strong>Despues de la clase</strong>
+      Todo queda guardado automaticamente en Google Sheets. La hoja "Resumen" se actualiza con los acumulados de cada estudiante.
+    </div>
+  </div>
+
+  <!-- TROUBLESHOOTING -->
+  <h2 class="section-title">Solucion de problemas</h2>
+
+  <div class="trouble-item">
+    <div class="trouble-problem">"Necesitas compartir tu ubicacion"</div>
+    <div class="trouble-solution">El estudiante debe abrir en Chrome o Safari (no en navegadores in-app de Instagram o WhatsApp) y aceptar el permiso de ubicacion.</div>
+  </div>
+  <div class="trouble-item">
+    <div class="trouble-problem">"No estas dentro del rango del aula"</div>
+    <div class="trouble-solution">El estudiante esta fuera del radio configurado. Verifica que las coordenadas GPS son correctas.</div>
+  </div>
+  <div class="trouble-item">
+    <div class="trouble-problem">"Tu correo no esta registrado"</div>
+    <div class="trouble-solution">El correo no coincide con el de la hoja "Estudiantes". Verificar y corregir en Google Sheets.</div>
+  </div>
+  <div class="trouble-item">
+    <div class="trouble-problem">"Ya registraste tu asistencia"</div>
+    <div class="trouble-solution">Solo se permite un registro por sesion. Esto es correcto.</div>
+  </div>
+  <div class="trouble-item">
+    <div class="trouble-problem">No llegan correos de comprobante</div>
+    <div class="trouble-solution">Verificar que la Gmail API este habilitada en Google Cloud Console.</div>
+  </div>
+
+  <!-- SECURITY -->
+  <div class="info-box danger" style="margin-top: 40px;">
+    <strong>Seguridad y privacidad</strong>
+    Nunca compartas tu Client Secret, Private Key ni el archivo JSON. No los subas a GitHub ni los pegues en chats. En Vercel estan encriptadas. El sistema solo almacena nombre, correo y datos de asistencia. No guarda ubicaciones permanentes.
+  </div>
+
+  <!-- CREDITS -->
+  <div class="footer">
+    <strong>Proyecto original:</strong> Felipe Andres Guzman Dahik — Profesor de Etica, UEES<br>
+    <strong>Repositorio:</strong> github.com/asepsicoespi-afk/asistencia-qr-uees<br>
+    <strong>Tecnologias:</strong> Next.js &bull; Vercel &bull; Google Sheets API &bull; Gmail API &bull; NextAuth.js<br><br>
+    Construido con asistencia de inteligencia artificial &bull; Mayo 2026
+  </div>
+
+</div>
+
+</body>
+</html>
